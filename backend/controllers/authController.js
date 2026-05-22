@@ -1,144 +1,105 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { getIsMockDB } = require('../config/db');
-const { store, saveDb } = require('../config/mockDb');
+const users = [];
 
-// Helper to generate token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'supersecretdevtrackrtokenkey123!', {
-    expiresIn: '30d'
+// SIGNUP
+const signup = async (req, res) => {
+try {
+console.log("Signup Request:", req.body);
+
+
+const {
+  username,
+  email,
+  password,
+} = req.body;
+
+// Validation
+if (!username || !email || !password) {
+  return res.status(400).json({
+    message: "Please fill all fields",
   });
+}
+
+// Existing user check
+const existingUser = users.find(
+  (user) => user.email === email
+);
+
+if (existingUser) {
+  return res.status(400).json({
+    message: "User already exists",
+  });
+}
+
+// Create user
+const user = {
+  id: Date.now(),
+  username,
+  email,
+  password,
 };
 
-// @desc    Register user
-// @route   POST /api/auth/signup
-// @access  Public
-const registerUser = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
+users.push(user);
 
-    if (!username || !email || !password) {
-      return res.status(400).json({ success: false, message: 'Please add all fields' });
-    }
+res.status(201).json({
+  message: "Signup successful",
+  user,
+});
 
-    let userExists;
 
-    if (getIsMockDB()) {
-      userExists = store.users.some(u => u.email === email || u.username === username);
-    } else {
-      userExists = await User.findOne({ $or: [{ email }, { username }] });
-    }
+} catch (error) {
+console.error("Signup Error:", error);
 
-    if (userExists) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
-    }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+res.status(500).json({
+  message: "Server error during signup",
+});
 
-    let newUser;
 
-    if (getIsMockDB()) {
-      newUser = {
-        _id: 'mock_usr_' + Math.random().toString(36).substring(2, 9),
-        username,
-        email,
-        password: hashedPassword,
-        githubToken: null,
-        createdAt: new Date()
-      };
-      store.users.push(newUser);
-      saveDb();
-    } else {
-      newUser = await User.create({
-        username,
-        email,
-        password: hashedPassword
-      });
-    }
-
-    res.status(201).json({
-      success: true,
-      data: {
-        _id: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
-        githubToken: newUser.githubToken,
-        token: generateToken(newUser._id)
-      }
-    });
-  } catch (error) {
-    console.error('Signup error:', error);
-    res.status(500).json({ success: false, message: 'Server error during signup' });
-  }
+}
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
-// @access  Public
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+// LOGIN
+const login = async (req, res) => {
+try {
+console.log("Login Request:", req.body);
 
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Please add email and password' });
-    }
 
-    let user;
+const {
+  email,
+  password,
+} = req.body;
 
-    if (getIsMockDB()) {
-      user = store.users.find(u => u.email === email);
-    } else {
-      user = await User.findOne({ email });
-    }
+const user = users.find(
+  (u) =>
+    u.email === email &&
+    u.password === password
+);
 
-    if (!user) {
-      return res.status(400).json({ success: false, message: 'Invalid credentials' });
-    }
+if (!user) {
+  return res.status(400).json({
+    message: "Invalid credentials",
+  });
+}
 
-    // Verify password
-    const isMatch = await bcrypt.compare(password, user.password);
+res.status(200).json({
+  message: "Login successful",
+  user,
+});
 
-    if (!isMatch) {
-      return res.status(400).json({ success: false, message: 'Invalid credentials' });
-    }
 
-    res.status(200).json({
-      success: true,
-      data: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        githubToken: user.githubToken,
-        token: generateToken(user._id)
-      }
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ success: false, message: 'Server error during login' });
-  }
-};
+} catch (error) {
+console.error("Login Error:", error);
 
-// @desc    Get current user profile
-// @route   GET /api/auth/me
-// @access  Private
-const getMe = async (req, res) => {
-  try {
-    // req.user is set by protect middleware
-    res.status(200).json({
-      success: true,
-      data: req.user
-    });
-  } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ success: false, message: 'Server error fetching user details' });
-  }
+
+res.status(500).json({
+  message: "Server error during login",
+});
+
+
+}
 };
 
 module.exports = {
-  registerUser,
-  loginUser,
-  getMe
+signup,
+login,
 };

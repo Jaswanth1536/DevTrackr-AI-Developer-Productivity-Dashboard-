@@ -44,6 +44,13 @@ language: "React",
 const totalStars = 25;
 const totalForks = 12;
 const totalIssues = 4;
+const [selectedRepo, setSelectedRepo] =
+  useState("DevTrackr");
+
+const handleRefresh = () => {
+  window.location.reload();
+};
+
 
 return ( <div className="min-h-screen bg-black text-white flex">
 
@@ -58,7 +65,11 @@ return ( <div className="min-h-screen bg-black text-white flex">
   <div className="flex-1 pl-64 flex flex-col min-h-screen">
 
     {/* Navbar */}
-    <Navbar title="Analytics Overview" />
+  <Navbar
+  title="Analytics Overview"
+  selectedRepo={selectedRepo}
+  onRefresh={handleRefresh}
+/>
 
     {/* Main Section */}
     <main className="flex-grow p-8 space-y-8">
