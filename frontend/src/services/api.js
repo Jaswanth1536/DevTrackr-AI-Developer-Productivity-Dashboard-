@@ -10,6 +10,13 @@ const getHeaders = () => {
   }
   return headers;
 };
+export const fetchPullRequests = async (owner, repo) => {
+  const response = await fetch(
+    `http://localhost:5000/api/analytics/prs/${owner}/${repo}`
+  );
+
+  return response.json();
+};
 
 export const api = {
   get: async (endpoint) => {

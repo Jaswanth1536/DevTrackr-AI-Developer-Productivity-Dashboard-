@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const { connectDB } = require('./config/db');
 const analyticsRoutes = require("./routes/analyticsRoutes");
 
+require("dotenv").config();
 // Load environment variables
 dotenv.config();
 
