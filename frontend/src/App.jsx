@@ -8,12 +8,14 @@ import Dashboard from './pages/Dashboard';
 import Commits from "./pages/Commits";
 import PullRequests from "./pages/PullRequests";
 import Issues from "./pages/Issues";
+import AIInsights from "./pages/AIInsights";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/ai-insights" element={<AIInsights />} />
           <Route path="/issues" element={<Issues />} />
           <Route path="/prs" element={<PullRequests />} />
           {/* Public Auth Routes */}
