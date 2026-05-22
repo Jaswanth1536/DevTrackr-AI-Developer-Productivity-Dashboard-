@@ -7,6 +7,14 @@
       "password": "$2a$10$nG7U6qC1U7gkLDVZE4Onyu5.vMqWCTZLkrmgYdzAzH5yfqA9iRj2a",
       "githubToken": null,
       "createdAt": "2026-05-22T06:52:37.431Z"
+    },
+    {
+      "_id": "mock_usr_9h2wazc",
+      "username": "user1",
+      "email": "user1@gmail.com",
+      "password": "$2a$10$e16hhPxZaRtdrtj49oXbUOmjpcmtWZWTVcXf.nk990PY8zEKvJqgK",
+      "githubToken": null,
+      "createdAt": "2026-05-22T07:59:39.706Z"
     }
   ],
   "repositories": [],

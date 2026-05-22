@@ -5,6 +5,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Commits from "./pages/Commits";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
+
           {/* Protected Main Routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Dashboard />} />
@@ -22,6 +24,8 @@ function App() {
 
           {/* Fallback Catch All */}
           <Route path="*" element={<Navigate to="/" replace />} />
+
+          <Route path="/commits" element={<Commits />} />
         </Routes>
       </Router>
     </AuthProvider>

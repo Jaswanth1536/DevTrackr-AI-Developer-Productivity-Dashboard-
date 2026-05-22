@@ -2,12 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { connectDB } = require('./config/db');
+const analyticsRoutes = require("./routes/analyticsRoutes");
 
 // Load environment variables
 dotenv.config();
 
 // Create Express app
 const app = express();
+
+app.use("/api/analytics", analyticsRoutes);
 
 // Middleware
 app.use(cors({
@@ -25,6 +28,7 @@ app.use((req, res, next) => {
 
 // Mount Routes
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/repos', require('./routes/repoRoutes'));
 
 // Root Endpoint
 app.get('/', (req, res) => {

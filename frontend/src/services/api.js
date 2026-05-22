@@ -33,3 +33,15 @@ export const api = {
     return data;
   },
 };
+export const fetchCommits = async (owner, repo, token) => {
+  const response = await fetch(
+    `http://localhost:5000/api/analytics/commits/${owner}/${repo}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.json();
+};
