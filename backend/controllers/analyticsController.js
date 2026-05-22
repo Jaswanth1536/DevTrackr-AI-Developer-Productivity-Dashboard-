@@ -1,6 +1,7 @@
 const {
   fetchRepoCommits,
   fetchPullRequests,
+  fetchIssues
 } = require("../services/githubService");
 
 const getRepoCommits = async (req, res) => {
@@ -15,6 +16,21 @@ const getRepoCommits = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to fetch commits",
+      error: error.message,
+    });
+  }
+};
+
+const getIssues = async (req, res) => {
+  try {
+    const { owner, repo } = req.params;
+
+    const issues = await fetchIssues(owner, repo);
+
+    res.json(issues);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch issues",
       error: error.message,
     });
   }
@@ -40,4 +56,5 @@ const getPullRequests = async (req, res) => {
 module.exports = {
   getRepoCommits,
   getPullRequests,
+  getIssues,
 };

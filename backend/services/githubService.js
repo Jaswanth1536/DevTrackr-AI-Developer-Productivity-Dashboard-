@@ -1,5 +1,19 @@
 const axios = require("axios");
 
+const fetchIssues = async (owner, repo) => {
+  const response = await axios.get(
+    `https://api.github.com/repos/${owner}/${repo}/issues?state=all`,
+    {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_PAT}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 const getMockRepos = () => [
 {
 id: 1001,
@@ -71,7 +85,8 @@ return response.data;
 };
 
 module.exports = {
-fetchUserRepos,
-fetchRepoCommits,
-fetchPullRequests,
+  fetchUserRepos,
+  fetchRepoCommits,
+  fetchPullRequests,
+  fetchIssues,
 };

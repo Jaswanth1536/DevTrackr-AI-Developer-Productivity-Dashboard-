@@ -18,6 +18,14 @@ export const fetchPullRequests = async (owner, repo) => {
   return response.json();
 };
 
+export const fetchIssues = async (owner, repo) => {
+  const response = await fetch(
+    `http://localhost:5000/api/analytics/issues/${owner}/${repo}`
+  );
+
+  return response.json();
+};
+
 export const api = {
   get: async (endpoint) => {
     const res = await fetch(`${API_URL}${endpoint}`, {

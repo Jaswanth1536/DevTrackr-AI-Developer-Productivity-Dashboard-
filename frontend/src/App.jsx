@@ -7,12 +7,14 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Commits from "./pages/Commits";
 import PullRequests from "./pages/PullRequests";
+import Issues from "./pages/Issues";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/issues" element={<Issues />} />
           <Route path="/prs" element={<PullRequests />} />
           {/* Public Auth Routes */}
           <Route path="/login" element={<Login />} />
