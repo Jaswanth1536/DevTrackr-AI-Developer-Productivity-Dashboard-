@@ -14,24 +14,35 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setFormError('Please enter both email and password.');
-      return;
-    }
-    
-    setFormError('');
-    setIsSubmitting(true);
-    
-    const result = await login(email, password);
-    setIsSubmitting(false);
-    
-    if (result.success) {
-      navigate('/');
-    } else {
-      setFormError(result.message || 'Invalid email or password.');
-    }
-  };
+e.preventDefault();
+
+try {
+const response = await login(
+email,
+password
+);
+
+
+console.log(response);
+
+if (response && response.success) {
+  navigate("/dashboard");
+} else {
+  alert(
+    response?.message || "Login failed"
+  );
+}
+
+
+} catch (error) {
+console.error(error);
+
+alert("Something went wrong");
+
+
+}
+};
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8 auth-glow">

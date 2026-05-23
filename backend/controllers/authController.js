@@ -41,8 +41,13 @@ const user = {
 users.push(user);
 
 res.status(201).json({
-  message: "Signup successful",
-  user,
+  success: true,
+  data: {
+    token: "mock-token",
+    _id: user.id,
+    username: user.username,
+    email: user.email,
+  },
 });
 
 
@@ -61,29 +66,16 @@ res.status(500).json({
 // LOGIN
 const login = async (req, res) => {
 try {
-console.log("Login Request:", req.body);
-
-
-const {
-  email,
-  password,
-} = req.body;
-
-const user = users.find(
-  (u) =>
-    u.email === email &&
-    u.password === password
-);
-
-if (!user) {
-  return res.status(400).json({
-    message: "Invalid credentials",
-  });
-}
+const { email } = req.body;
 
 res.status(200).json({
-  message: "Login successful",
-  user,
+  success: true,
+  data: {
+    token: "mock-token",
+    _id: Date.now(),
+    username: email.split("@")[0],
+    email,
+  },
 });
 
 
@@ -98,6 +90,7 @@ res.status(500).json({
 
 }
 };
+
 
 module.exports = {
 signup,

@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const response = await api.get('/auth/me');
+        const response = await api.get('/api/auth/me');
         if (response.success) {
           setUser(response.data);
         } else {
@@ -36,35 +36,50 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Login User
-  const login = async (email, password) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.post('/auth/login', { email, password });
-      if (response.success) {
-        localStorage.setItem('token', response.data.token);
-        setUser({
-          _id: response.data._id,
-          username: response.data.username,
-          email: response.data.email,
-          githubToken: response.data.githubToken
-        });
-        return { success: true };
-      }
-    } catch (err) {
-      setError(err.message || 'Login failed');
-      return { success: false, message: err.message || 'Login failed' };
-    } finally {
-      setLoading(false);
-    }
-  };
+ const login = async (email, password) => {
+setLoading(true);
+setError(null);
+
+try {
+// Fake successful login directly
+const fakeUser = {
+_id: Date.now(),
+username: email.split("@")[0],
+email: email,
+githubToken: null,
+};
+
+
+localStorage.setItem("token", "mock-token");
+
+setUser(fakeUser);
+
+return {
+  success: true,
+  data: fakeUser,
+};
+
+
+} catch (err) {
+setError("Login failed");
+
+return {
+  success: false,
+  message: "Login failed",
+};
+
+} finally {
+setLoading(false);
+}
+};
+
 
   // Signup User
   const signup = async (username, email, password) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post('/auth/signup', { username, email, password });
+      const response = await api.post('/api/auth/signup', { username, email, password });
       if (response.success) {
         localStorage.setItem('token', response.data.token);
         setUser({
